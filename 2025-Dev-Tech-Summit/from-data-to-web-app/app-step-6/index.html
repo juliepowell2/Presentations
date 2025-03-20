@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>6-Wheat Production</title>
+
+    <!-- Calcite imports -->
+    <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/3.0.3/calcite.css" />
+
+    <!-- ArcGIS Maps SDK for JavaScript imports -->
+    <script src="https://js.arcgis.com/4.32/"></script>
+    <link id="jsapi-mode-light" rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+
+    <!-- Load the Chart components -->
+    <script type="module" src="https://js.arcgis.com/charts-components/4.32/arcgis-charts-components.esm.js"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/charts-components/4.32/arcgis-charts-components.css" />
+
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <calcite-shell class="wheat-theme">
+        <calcite-navigation slot="header" id="nav">
+            <calcite-navigation-logo href="#" thumbnail="./images/agriculture-21.svg" alt="Application logo" slot="logo"
+                heading="US Wheat Production"></calcite-navigation-logo>
+            <calcite-chip-group selection-mode="multiple" slot="content-end" id="chips">
+                <calcite-chip id="table-chip" value="table">Production by county</calcite-chip>
+                <calcite-chip id="chart-chip" value="chart">Chart</calcite-chip>
+            </calcite-chip-group>
+        </calcite-navigation>
+
+        <div class="content-container">
+            <div class="content-start" id="map-div">
+                <calcite-panel id="map-container">
+                    <arcgis-map item-id="df007fcb2dba4bb183bd30d7b4562797" id="map" padding="{bottom: 500}">
+                        <arcgis-expand expanded position="top-left" group="top-left">
+                            <arcgis-legend></arcgis-legend>
+                        </arcgis-expand>
+                        <arcgis-expand position="top-left" group="top-left">
+                            <arcgis-layer-list></arcgis-layer-list>
+                        </arcgis-expand>
+                    </arcgis-map>
+                    <arcgis-time-slider id="yearSlider" layout="auto" mode="time-window"
+                        reference-element="map"></arcgis-time-slider>
+                    <calcite-panel id="chart-panel" style="display:none;">
+                        <arcgis-chart id="chart">
+                            <arcgis-charts-action-bar slot="action-bar">
+                            </arcgis-charts-action-bar>
+                        </arcgis-chart>
+                    </calcite-panel>
+                </calcite-panel>
+            </div>
+            <div class="content-end" id="table-div">
+                <calcite-panel>
+                    <calcite-shell class="panel-shell">
+                        <arcgis-feature-table reference-element="map" id="featureTable" return-geometry-enabled>
+                        </arcgis-feature-table>
+                        <calcite-sheet id="feature-sheet" display-mode="float" width-scale="m" slot="sheets"
+                            position="inline-end">
+                            <calcite-panel>
+                                <arcgis-feature id="feature-display"></arcgis-feature>
+                            </calcite-panel>
+                        </calcite-sheet>
+                    </calcite-shell>
+                </calcite-panel>
+            </div>
+        </div>
+
+    </calcite-shell>
+    <script src="./main.js"></script>
+</body>
+
+</html>

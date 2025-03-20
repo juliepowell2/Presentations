@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>1-Wheat Production</title>
+
+    <!-- ArcGIS Maps SDK for JavaScript imports -->
+    <script src="https://js.arcgis.com/4.32/"></script>
+    <link id="jsapi-mode-light" rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/light/main.css" />
+    <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+
+    <arcgis-map item-id="df007fcb2dba4bb183bd30d7b4562797">
+        <arcgis-expand position="top-left" mode="floating" expanded group="top-left">
+            <arcgis-legend legend-style="classic"></arcgis-legend>
+        </arcgis-expand>
+        <arcgis-expand position="top-left" mode="floating" group="top-left">
+            <arcgis-layer-list></arcgis-layer-list>
+        </arcgis-expand>
+
+    </arcgis-map>
+    <script src="./main.js"></script>
+</body>
+
+</html>

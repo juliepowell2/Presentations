@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Swipe demo</title>
+
+    <style>
+        html,
+        body,
+        arcgis-map {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.13.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.13.0/calcite.css" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.31/"></script>
+    <script type="module" src="https://js.arcgis.com/map-components/4.31/arcgis-map-components.esm.js"></script>
+</head>
+
+<body>
+
+    <calcite-shell>
+        <calcite-navigation slot="header">
+            <calcite-navigation-logo slot="logo" target="_blank" heading="Lava Swipe" />
+        </calcite-navigation>
+
+        <arcgis-map basemap="satellite" zoom="15" center="-154.88, 19.46">
+            <arcgis-swipe swipe-position="32"></arcgis-swipe>
+        </arcgis-map>
+
+    </calcite-shell>
+
+    <script>
+        async function load() {
+            const mapElem = document.querySelector("arcgis-map");
+            const swipeElem = document.querySelector("arcgis-swipe");
+            mapElem.addEventListener("arcgisViewReadyChange", async (event) => {
+                const TileLayer = await $arcgis.import("esri/layers/TileLayer");
+                const infrared = new TileLayer({
+                    url: "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/WV03_Kilauea_20180519_ShortwaveInfrared/MapServer",
+                    maxScale: 3000
+                });
+                mapElem.addLayer(infrared);
+
+                const nearInfrared = new TileLayer({
+                    url: "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/WV03_Kilauea_20180519_NearInfrared/MapServer",
+                    maxScale: 3000
+                });
+                mapElem.addLayer(nearInfrared);
+
+                swipeElem.leadingLayers = [infrared];
+                swipeElem.trailingLayers = [nearInfrared];
+            });
+        }
+        load();
+    </script>
+
+</body>
+
+</html>

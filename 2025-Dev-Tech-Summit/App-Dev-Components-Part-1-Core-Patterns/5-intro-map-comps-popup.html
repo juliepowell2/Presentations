@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>5-National park trails</title>
+
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        #map-container {
+            margin: 1rem;
+            width: calc(100% - 2rem);
+            border: 1px solid var(--calcite-color-border-2);
+            border-radius: 8px;
+            box-shadow: var(--calcite-shadow-md);
+        }
+
+        calcite-navigation-logo {
+            --calcite-ui-icon-color: var(--calcite-color-brand);
+        }
+
+        #elevation-panel .esri-elevation-profile {
+            width: 100%;
+            --chart-height: 130px;
+        }
+
+        #elevation-panel {
+            box-shadow: none;
+            border: none;
+            height: 400px;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            border-radius: 0;
+            border-top: 1px solid var(--calcite-color-border-3);
+        }
+
+        #elevation-panel calcite-chip-group {
+            margin-inline-end: .5rem;
+        }
+
+        calcite-shell-panel[slot="panel-bottom"] {
+            margin-bottom: 1rem;
+        }
+
+        .esri-ui-corner .esri-component {
+            box-shadow: none;
+        }
+
+        calcite-chip-group {
+            align-self: center;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            width: 100%;
+        }
+
+        .content-container calcite-panel {
+            margin: 1rem;
+            height: calc(100% - 2rem);
+            width: calc(100% - 2rem);
+            border-radius: 8px;
+            box-shadow: var(--calcite-shadow-sm);
+        }
+
+        .content-start {
+            background: var(--calcite-color-background);
+            height: 100%;
+            width: 100%;
+        }
+
+        arcgis-search {
+            display: flex;
+            margin-right: 1em;
+        }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.32/"></script>
+    <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/3.0.3/calcite.css" />
+    <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+</head>
+
+<body>
+
+    <calcite-shell class="custom-theme">
+        <calcite-navigation slot="header">
+            <calcite-navigation-logo slot="logo" icon="map" heading="US National Parks"
+                description="Trail Explorer"></calcite-navigation-logo>
+            <arcgis-search slot="content-end" reference-element="map"></arcgis-search>
+        </calcite-navigation>
+
+        <div class="content-container">
+            <div class="content-start">
+                <calcite-panel id="map-container">
+                    <arcgis-map ground="world-elevation" item-id="f599313f70204fc79bcc2885db89d09f" id="map"
+                        padding="{bottom: 500}">
+
+                    </arcgis-map>
+                    <calcite-panel id="elevation-panel" heading="Elevation profile">
+                        <calcite-chip-group slot="header-actions-end">
+                            <calcite-chip icon="walking-distance" id="distance"></calcite-chip>
+                            <calcite-chip icon="altitude" id="elevation"></calcite-chip>
+                        </calcite-chip-group>
+                        <arcgis-elevation-profile reference-element="map" unit="imperial" hide-clear-button hide-legend
+                            hide-settings-button></arcgis-elevation-profile>
+                    </calcite-panel>
+                </calcite-panel>
+            </div>
+    </calcite-shell>
+
+    <script>
+        async function load() {
+            const mapElem = document.querySelector("arcgis-map");
+            const elevProf = document.querySelector("arcgis-elevation-profile");
+            const distanceElem = document.getElementById("distance");
+            const elevationElem = document.getElementById("elevation");
+
+            document.querySelector("arcgis-map").addEventListener("arcgisViewReadyChange", async (event) => {
+                mapElem.popup.dockEnabled = true;
+                mapElem.popup.dockOptions = {
+                    buttonEnabled: false,
+                    breakpoint: false,
+                    position: "top-right"
+                }
+                mapElem.popup.visibleElements = {
+                    actionBar: false
+                }
+                view.ui.container.classList.remove("calcite-mode-light");
+            });
+
+            elevProf.addEventListener("arcgisReady", async (event) => {
+                const profiles = elevProf.profiles;
+                elevProf.addEventListener("arcgisPropertyChange", (e) => {
+                    if (e.detail.name === "progress" && elevProf.progress === 1) {
+                        stats = profiles.items[0].statistics;
+                        const elevGain = Math.round((stats.elevationGain + Number.EPSILON) * 100) / 100;
+                        const distance = Math.round((stats.maxDistance + Number.EPSILON) * 100) / 100;
+                        elevationElem.innerText = elevGain + " " + elevProf.effectiveUnits.elevation;
+                        distanceElem.innerText = distance + " " + elevProf.effectiveUnits.distance;
+                    }
+                });
+            });
+        }
+        load();
+    </script>
+
+</body>
+
+</html>
